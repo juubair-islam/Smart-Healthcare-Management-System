@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 16, 2025 at 02:28 PM
+-- Generation Time: Dec 16, 2025 at 03:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,6 +55,14 @@ CREATE TABLE `appointments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`appointment_id`, `patient_id`, `appointment_date`, `doctor_id`, `appointment_datetime`, `reason`, `status`, `created_at`) VALUES
+(17, 21, '2025-12-16', 20, '2025-12-16 19:45:00', 'Ajke amar mon bhalo nei', 'Cancelled', '2025-12-16 13:45:17'),
+(18, 21, '2025-12-16', 20, '2025-12-16 19:47:00', 'Ajke amar mon bhalo nei (2)', 'Completed', '2025-12-16 13:47:32');
+
 -- --------------------------------------------------------
 
 --
@@ -74,6 +82,13 @@ CREATE TABLE `billing` (
   `payment_method` enum('Cash','Card','Online','Insurance') DEFAULT 'Cash'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `billing`
+--
+
+INSERT INTO `billing` (`bill_id`, `patient_id`, `appointment_id`, `amount`, `tax_amount`, `total_payable`, `billing_date`, `due_date`, `status`, `payment_method`) VALUES
+(2, 21, 18, 500.00, 0.00, 500.00, '2025-12-16 19:51:27', NULL, 'Paid', 'Card');
+
 -- --------------------------------------------------------
 
 --
@@ -90,6 +105,13 @@ CREATE TABLE `consultations` (
   `advice` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `consultations`
+--
+
+INSERT INTO `consultations` (`consultation_id`, `appointment_id`, `patient_id`, `doctor_id`, `symptoms`, `diagnosis`, `advice`, `created_at`) VALUES
+(20, 18, 21, 20, 'Luiccha beta', 'kono osudh nai', 'Bhalo hoye jaa', '2025-12-16 13:48:54');
 
 -- --------------------------------------------------------
 
@@ -108,6 +130,13 @@ CREATE TABLE `doctors` (
   `image_url` varchar(255) DEFAULT 'assets/img/default_doctor.jpg',
   `availability` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`availability`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `doctors`
+--
+
+INSERT INTO `doctors` (`doctor_id`, `full_name`, `expertise`, `qualification`, `gender`, `consultancy_fee`, `contact_number`, `image_url`, `availability`) VALUES
+(20, 'Ananna Roy', 'Neurology', 'MBBS', 'Female', 0.00, '01711111111', 'assets/img/doctors/doc_1765892427.jpg', NULL);
 
 -- --------------------------------------------------------
 
@@ -170,6 +199,7 @@ CREATE TABLE `patients` (
   `full_name` varchar(150) NOT NULL,
   `date_of_birth` date DEFAULT NULL,
   `gender` enum('Male','Female','Other') DEFAULT NULL,
+  `blood_group` varchar(5) DEFAULT NULL,
   `contact_phone` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `insurance_policy_number` varchar(100) DEFAULT NULL,
@@ -178,6 +208,13 @@ CREATE TABLE `patients` (
   `emergency_contact_relation` varchar(50) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `patients`
+--
+
+INSERT INTO `patients` (`patient_id`, `full_name`, `date_of_birth`, `gender`, `blood_group`, `contact_phone`, `email`, `insurance_policy_number`, `emergency_contact_name`, `emergency_contact_number`, `emergency_contact_relation`, `created_at`) VALUES
+(21, 'Fuad', '2001-01-02', 'Male', NULL, '12345', '', NULL, 'Sami', '01293847563', 'Sugar Brother', '2025-12-16 13:43:05');
 
 -- --------------------------------------------------------
 
@@ -193,6 +230,14 @@ CREATE TABLE `prescriptions` (
   `duration` varchar(100) DEFAULT NULL,
   `instructions` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prescriptions`
+--
+
+INSERT INTO `prescriptions` (`prescription_id`, `consultation_id`, `medicine_name`, `dosage`, `duration`, `instructions`) VALUES
+(4, 20, 'Ya habibi', '1-0-1', '7', NULL),
+(5, 20, 'NSU Chick', '1', '7', NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +274,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `password_hash`, `role`, `created_at`) VALUES
-(18, 'Jubair', '', '$2y$10$wqtFlWgE6wEg5tdiwzV2DOZ3QwnmASPhPlfFq9RWzLFn3GfOoefey', 'Admin', '2025-12-16 13:24:28');
+(18, 'Jubair', '', '$2y$10$wqtFlWgE6wEg5tdiwzV2DOZ3QwnmASPhPlfFq9RWzLFn3GfOoefey', 'Admin', '2025-12-16 13:24:28'),
+(20, 'ananna', '', '$2y$10$9utXSAvttjCJtIMEYQ5l4uCPx3wp3T2QZ/RQCIvNbc09Qr0tL4DGW', 'Doctor', '2025-12-16 13:40:27'),
+(21, '12345', '', '$2y$10$g.D5rmM0Qy9aQLPRQbtQF.AtTzeHp4pzFbmilvImQiDgLonNNLF5G', 'Patient', '2025-12-16 13:43:05');
 
 --
 -- Indexes for dumped tables
@@ -329,19 +376,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `consultations`
 --
 ALTER TABLE `consultations`
-  MODIFY `consultation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `consultation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `insuranceclaims`
@@ -365,7 +412,7 @@ ALTER TABLE `medicalrecords`
 -- AUTO_INCREMENT for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `reminders`
@@ -377,7 +424,7 @@ ALTER TABLE `reminders`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables

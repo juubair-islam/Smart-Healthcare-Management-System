@@ -113,17 +113,31 @@ function calculateAge($dob) {
                             <label for="reg_dob" class="form-label">Date of Birth</label>
                             <input type="date" class="form-control" id="reg_dob" name="date_of_birth" required onchange="calculatePatientAge()">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="reg_age" class="form-label">Age (Calculated)</label>
                             <input type="text" class="form-control" id="reg_age" readonly disabled placeholder="Auto-calculated">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="reg_gender" class="form-label">Gender</label>
                             <select class="form-select" id="reg_gender" name="gender" required>
                                 <option value="" selected disabled>Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="reg_blood" class="form-label">Blood Group</label>
+                            <select class="form-select" id="reg_blood" name="blood_group" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
                             </select>
                         </div>
                     </div>
